@@ -1,7 +1,7 @@
 %include "include/syscall.inc" ; including syscall headers                                                                                                                                                     
 
 
-extern socketfd ; the return fd from the socket syscall
+extern socketfd,server_response,server_close,exit_program
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -31,4 +31,9 @@ syscall
                        ; This new descriptor represents the unique connection with this specific client.
                        ; You will use the value in RAX later to read requests and write responses.
 mov [clientfd], rax    ; client socket that we will use in the response
-ret
+
+
+call server_response
+call server_close
+call exit_program
+

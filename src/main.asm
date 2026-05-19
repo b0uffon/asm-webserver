@@ -2,7 +2,6 @@
 %include "include/socket.inc" ; including some arguments
 
 extern server_socket,server_bind,server_listen,server_accept
-extern exit_program
 
 
 global main ; entry point
@@ -15,6 +14,5 @@ main:
         call server_bind   ;
         call server_listen ; 
         call server_accept ;
-        call exit_program  ;
-        
+         
 
