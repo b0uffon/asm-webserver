@@ -1,8 +1,8 @@
 %include "include/syscall.inc" ; including syscall headers
 %include "include/socket.inc" ; including some arguments
 
-extern exit_program
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+global socketfd ; global variable for using in the others syscalls
 
 section .bss
 
@@ -21,14 +21,14 @@ server_socket:
 
 mov rax, SYS_socket ; syscall 
 
-mov rdi, AF_INET ; ipv4
+mov rdi, AF_INET ; this socket will use ipv4
 
-mov rsi, SOCK_STREAM
+mov rsi, SOCK_STREAM ; the type of socket, oriented flow of bytes, so, tcp
 
-mov rdx, SOCK_PROTOCOL
+mov rdx, SOCK_PROTOCOL ;  kernel, chose the protocol based on the combination that i used
 
 syscall 
 
-mov [socketfd],rax
+mov [socketfd],rax ; saving the file descriptor returned from the syscall in the buffer!
 
-ret
+ret ; end function
