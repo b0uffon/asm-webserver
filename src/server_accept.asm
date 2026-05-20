@@ -20,6 +20,7 @@ global server_accept
 section .text
 server_accept:
 
+.server_loop:
 mov rax, SYS_accept    ; syscall number for accept
 mov rdi, [socketfd]    ; the server file descriptor currently listening
 
@@ -35,5 +36,4 @@ mov [clientfd], rax    ; client socket that we will use in the response
 
 call server_response
 call server_close
-call exit_program
-
+jmp .server_loop
