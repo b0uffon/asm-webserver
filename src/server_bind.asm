@@ -19,8 +19,8 @@ section .data
     socketaddr:
 
         family: dw AF_INET ; 2 bytes for AF_INET
-        port:   dw 0xB80b  ; 2 bytes for the number 3000( it will be the port)
-                           ; Port 3000 swapped to Big-Endian (Network Byte Order),h
+        port:    dw 0x901F ; 2 bytes for the number 8080 (Network Byte Order / Big-Endian)
+                           ; Port 8080 swapped to Big-Endian (Network Byte Order),h
         ip_address: dd 0   ; 4 bytes because of the ipv4 patter 000.000.000.000 
         sin_zero:   dq 0   ; 8 bytes
 
