@@ -51,5 +51,12 @@ cd build
 Now, open your preferred web browser and navigate to:
 http://localhost:8080
 
+---
 
+## Footprint and Efficiency
+
+By avoiding `libc`, eliminating runtime wrappers, and applying strict linker optimizations (`-s -N --no-eh-frame-hdr`), the final compiled `web-server` binary achieves a near-theoretical minimum storage footprint:
+
+```text
+-rwx------ 1 homunculo homunculo 1.1K May 27 19:41 web-server
 

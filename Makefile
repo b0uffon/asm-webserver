@@ -1,7 +1,7 @@
 # variáveis de compilação
 ASM       = nasm
 ASM_FLAGS = -f elf64 -Isrc/
-LD        = ld
+LD        = ld -s -N --no-eh-frame-hdr -z max-page-size=0x1000
 
 # diretórios
 SRC_DIR   = src
