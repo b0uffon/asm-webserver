@@ -1,4 +1,5 @@
 %include "include/syscall.inc" ; including syscall headers                                                                                                                                                     
+%include "include/socket.inc" ; including some arguments
 
 
 extern socketfd,server_response,server_close,server_latency,exit_program
@@ -38,32 +39,38 @@ js .server_loop        ; if error, back to the server_loop
                        ; : If successful, RAX now contains a NEW File Descriptor.
                        ; This new descriptor represents the unique connection with this specific client.
                        ; You will use the value in RAX later to read requests and write responses.
-mov [clientfd], rax    ; client socket that we will use in the response
-
+mov r12, rax    ; client socket that we will use in the response
+call thread
+jmp .server_loop
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;THREADS ROUTINE
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                       ;Each thread must have its own memory region to store the function and its arguments. It’s as if the thread had its own “stack” area
                        ;  pid_t fork(void);
 
-mov rax,SYS_clone       ;to handle concurrent processes
+thread:
+    mov rdi, 0
+    mov rax, SYS_brk
+    syscall
+    mov rdx, rax
 
-syscall 
-                    
-test rax,rax
-jz .child_process      ; if rax ==0, child routine                  
-                       ; If the return of clone is zero, it means that it is being executed
-                       ; by the child process. So the server response routine is executed.
+    mov rdi, rax
+    add rdi, CHILD_STACK_SIZE
+    mov rax, SYS_brk
+    syscall
 
+    mov rdi, CLONE_VM|CLONE_FS|CLONE_FILES|CLONE_SIGHAND|CLONE_PARENT|CLONE_THREAD|CLONE_IO
+    lea rsi, [rdx + CHILD_STACK_SIZE - 8]
+    mov qword [rsi], .child_process
+    mov rax, SYS_clone
+    syscall
+    ret
 
-;FATHER ROUTINE
-
-call server_close      ;closes the father's reference to the client's fd
-
-
-jmp .server_loop       ; goes back to accept new connections
 
 ;;;;;;;;;;;;;;;;;;;
 ;CHILD ROUTINE
+;;;;;;;;;;;;;;;;;;
 .child_process:
 
 

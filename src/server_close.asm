@@ -12,6 +12,6 @@ server_close:
          ; int close(int fd)
 
 mov rax,SYS_close
-mov rdi,[clientfd]
+mov rdi,r12 ; client fd
 syscall
 ret

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASM x86_64 Web Server</title>
+    <style>
+        :root {
+            --bg-color: #0a0a0c;
+            --card-bg: #121216;
+            --primary: #00ff66;
+            --primary-glow: rgba(0, 255, 102, 0.3);
+            --text: #e1e1e6;
+            --text-dark: #7c7c8a;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text);
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            justify-content: center;
+            align-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Animação de Scanline (Linhas de TV antiga) */
+        body::before {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 2;
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
+        }
+
+        /* Efeito de Flicker/Pulsação na tela */
+        .container {
+            width: 100%;
+            max-width: 600px;
+            padding: 20px;
+            z-index: 3;
+            animation: textShadow 1.5s infinite alternate;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 2px solid var(--primary);
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 0 20px var(--primary-glow);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Detalhe estético no topo do Card */
+        .card::before {
+            content: "SYS_CLONE / SYS_BRK COMPLIANT";
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--primary);
+            color: var(--bg-color);
+            font-weight: bold;
+            font-size: 11px;
+            padding: 2px 15px;
+            border-radius: 0 0 8px 8px;
+            letter-spacing: 1px;
+        }
+
+        h1 {
+            color: var(--primary);
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px var(--primary);
+        }
+
+        .subtitle {
+            color: var(--text-dark);
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            border-bottom: 1px dashed var(--text-dark);
+            padding-bottom: 15px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .stat-box {
+            border: 1px solid rgba(0, 255, 102, 0.2);
+            padding: 15px;
+            border-radius: 6px;
+            background: rgba(0, 255, 102, 0.02);
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-dark);
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-size: 1.2rem;
+            color: var(--text);
+            font-weight: bold;
+        }
+
+        .stat-value.active {
+            color: var(--primary);
+            text-shadow: 0 0 5px var(--primary);
+            /* Animação do cursor piscando */
+            animation: blink 0.8s infinite steps(2);
+        }
+
+        .footer {
+            color: var(--text-dark);
+            font-size: 0.8rem;
+            margin-top: 20px;
+        }
+
+        /* Definição das Animações */
+        @keyframes blink {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        @keyframes textShadow {
+            0% {
+                text-shadow: 0.43899241933008653px 0 1px rgba(0,30,255,0.5), -0.43899241933008653px 0 1px rgba(255,0,80,0.3), 0 0 3px;
+            }
+            100% {
+                text-shadow: 2.4304005119410155px 0 1px rgba(0,30,255,0.5), -2.4304005119410155px 0 1px rgba(255,0,80,0.3), 0 0 3px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="card">
+            <h1>RAW ASSEMBLY</h1>
+            <p class="subtitle">x86_64 Web Server Core v1.0</p>
+            
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <p class="stat-label">MultiThreading</p>
+                    <p class="stat-value active">Sys_clone</p>
+                </div>
+                <div class="stat-box">
+                    <p class="stat-label">RAM Alocada</p>
+                    <p class="stat-value">4096 Bytes</p>
+                </div>
+                <div class="stat-box">
+                    <p class="stat-label">Status HTTP</p>
+                    <p class="stat-value" style="color: #00ff66;">200 OK</p>
+                </div>
+                <div class="stat-box">
+                    <p class="stat-label">Registrador de fd de cliente</p>
+                    <p class="stat-value">Reg R12</p>
+                </div>
+            </div>
+
+            <p class="footer">Engineered via pure Linux System Calls</p>
+        </div>
+    </div>
+
+</body>
+</html>
