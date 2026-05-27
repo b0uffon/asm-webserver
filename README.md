@@ -33,8 +33,23 @@ sudo apt install git nasm make binutils
 ### 2. Clone the Repository
 Clone the project structure to your local machine using git:
 ```bash
-git clone [https://github.com/b0uffon/asm-webserver.git](https://github.com/b0uffon/asm-webserver.git)
+git clone https://github.com/b0uffon/asm-webserver
 cd asm-webserver
 ```
+
+### 3. Compile Using Make
+The project includes a smart Makefile that automatically detects all modular `.asm` files inside the `src/` directory, compiles them into object files, and links them using the explicit `-e main` entry point flag.
+
+To build the executable from scratch, simply run:
+```bash
+make
+```
+To run the server without triggering file-not-found errors (`-ENOENT`), navigate into the binary directory, execute the compiled binary, and open your browser:
+```bash
+cd build
+./web-server
+Now, open your preferred web browser and navigate to:
+http://localhost:8080
+
 
 
