@@ -11,6 +11,7 @@ The server invokes the `SYS_clone` syscall to spawn parallel execution contexts 
 * **Context Isolation:** To prevent data corruption caused by shared virtual memory space (`CLONE_VM`), the server avoids using global variables in the `.bss` section for active connection File Descriptors.
 * **Dedicated Registers:** The client socket descriptor is securely isolated inside the physical register `R12`, while the opened file descriptor is isolated inside register `R14`. This ensures complete race-condition immunity during overlapping concurrent requests.
 
+
 ### Dynamic Disk I/O (`SYS_open` & `SYS_read`)
 The server does not serve static strings mapped directly in memory. It implements a real-time bridge between the Virtual File System (VFS) and the Linux TCP/IP stack:
 1. Transmits the standard HTTP header via `SYS_write`.
@@ -60,4 +61,19 @@ By avoiding `libc`, eliminating runtime wrappers, and applying strict linker opt
 
 ```text
 -rwx------ 1 homunculo homunculo 1.1K May 27 19:41 web-server
+```
+## Diagnostics and Tracing
 
+To validate the concurrent thread lifecycle behavior, verify system call integrity, and confirm active multithreading under load, you can combine system call tracing with load testing:
+
+### 1. Unified Concurrency and Tracing Test
+To watch the Linux Kernel manage your custom threads in real time, run the server inside `strace` with the follow-forks flag (`-f`) in one terminal session:
+```bash
+strace -f ./build/web-server
+```
+
+### Concurrency and Performance Testing
+To benchmark the server's response overhead and verify its behavior under a rapid succession of requests, you can execute a loop using xargs to fire multiple instances of curl and track the execution time:
+```bash
+time echo {1..10} | xargs -n1 bash -c "time curl http://localhost:8080"
+```
