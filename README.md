@@ -51,6 +51,7 @@ cd build
 Now, open your preferred web browser and navigate to:
 http://localhost:8080
 
+```
 ---
 
 ## Footprint and Efficiency
